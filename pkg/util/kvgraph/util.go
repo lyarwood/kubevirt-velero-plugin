@@ -21,7 +21,6 @@ package kvgraph
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/vmware-tanzu/velero/pkg/kuberesource"
 	"github.com/vmware-tanzu/velero/pkg/plugin/velero"
@@ -129,12 +128,6 @@ func addPreference(vm *v1.VirtualMachine, resources []velero.ResourceIdentifier)
 }
 
 func addInstanceTypeMatcherResource(matcher v1.Matcher, statusRef *v1.InstancetypeStatusRef, namespace string, resources []velero.ResourceIdentifier) []velero.ResourceIdentifier {
-	switch kind := strings.ToLower(matcher.GetKind()); kind {
-	case "virtualmachineclusterinstancetype", "virtualmachineclusterpreference":
-		resources = addVeleroResource(matcher.GetName(), "", kind, resources)
-	case "virtualmachineinstancetype", "virtualmachinepreference":
-		resources = addVeleroResource(matcher.GetName(), namespace, kind, resources)
-	}
 	if statusRef != nil && statusRef.ControllerRevisionRef != nil {
 		resources = addVeleroResource(statusRef.ControllerRevisionRef.Name, namespace, "controllerrevisions", resources)
 	}
